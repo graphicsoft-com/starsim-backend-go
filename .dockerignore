@@ -14,3 +14,13 @@ deploy/
 run.sh
 Dockerfile.monorepo
 README.md
+
+# Piper binary + voices are fetched inside the Dockerfile, not copied from context
+assets/piper/voices
+assets/piper/*.so*
+assets/piper/espeak-ng-data
+assets/piper/piper
+assets/piper/piper_phonemize
+assets/piper/espeak-ng
+assets/piper/libtashkeel_model.ort
+assets/piper/pkgconfig
