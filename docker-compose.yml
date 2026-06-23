@@ -1,0 +1,44 @@
+# Self-contained stack: Go backend (serves the React client) + MongoDB.
+# One command:  docker compose up --build
+#   App:    http://localhost:5000     (host 5000 -> container 3000)
+#   Mongo:  internal only (service "mongodb")
+services:
+  mongodb:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_APP_ENV: live
+        VITE_INSTANCE_NAME: demo
+        VITE_AUDIO_SERVER_URL: ${XTTS_BASE_URL:-}
+    image: starsim-go:local
+    restart: unless-stopped
+    # Loads DEEPINFRA_API_KEY, MINIO_*, NEBO_API_KEY, TTS_MODE, etc. from .env
+    env_file:
+      - ./.env
+    # These OVERRIDE values from .env so the container talks to the mongo
+    # service (not localhost) and the port matches the image's healthcheck.
+    environment:
+      MONGO_URI: mongodb://mongodb:27017/RHA-simulation
+      PORT: "3000"
+      CLIENT_DIST_PATH: /app/client/dist
+    ports:
+      - "5000:3000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+volumes:
+  mongo-data:
