@@ -23,8 +23,13 @@ go.work.sum
 logs/
 *.log
 
-# ─── Built frontend (served via CLIENT_DIST_PATH) ────────────────────────────
+# ─── Node / client workspace (copied in for the Docker build) ────────────────
+node_modules/
+**/node_modules/
 client/dist/
+shared-types/dist/
+shared-utils/dist/
+.vite/
 
 # ─── TTS runtime artifacts ───────────────────────────────────────────────────
 # Generated audio output; keep the Piper binary/voices if they live in assets

@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Primary Blue Palette */
+  --color-primary: #2563eb; /* Base target blue */
+  --color-primary-dark: #1d4ed8; /* Deeper blue for hover states */
+  --color-primary-light: #dbeafe; /* Very pale blue for active/highlight backgrounds */
+
+  /* Cool Neutrals for Light Mode */
+  --color-bg-page: #f8fafc; /* Off-white with a subtle cool tint */
+  --color-bg-section: #ffffff; /* Pure white for cards/sections */
+  --color-border: #e2e8f0; /* Light cool gray */
+  --color-text-primary: #0f172a; /* Very dark slate for high contrast */
+  --color-text-secondary: #334155; /* Lighter slate for secondary text */
+
+  /* Status Colors */
+  --color-status-red: #d32f2f;
+  --color-status-yellow: #f59e0b;
+  --color-status-green: #1e3a8a;
+}
+
+[data-theme='dark'] {
+  /* Dark Mode Blue Palette */
+  --color-primary: #60a5fa; /* Bright, desaturated blue for dark mode readability */
+  --color-primary-dark: #3b82f6; /* Slightly deeper blue */
+  --color-primary-light: #1e3a8a; /* Deep, muted blue for dark mode highlights */
+
+  /* Cool Neutrals for Dark Mode */
+  --color-bg-page: #0f172a; /* Very dark slate blue background */
+  --color-bg-section: #1e293b; /* Slightly lighter slate for cards */
+  --color-border: #334155; /* Medium-dark slate border */
+  --color-text-primary: #ffffff; /* Pure white text */
+  --color-text-secondary: #cbd5e1; /* Light cool gray for secondary text */
+
+  /* Status Colors */
+  --color-status-red: #ff6b6b;
+  --color-status-yellow: #f59e0b;
+  --color-status-green: #3b82f6; /* Standard dark mode green (replacing the old theme-tied green) */
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    @apply bg-bg-page text-text-primary font-sans;
+    min-height: 100vh;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+@layer components {
+  /* Pulsing indicator dot */
+  .pulse-dot {
+    @apply inline-block w-1.5 h-1.5 rounded-full bg-status-green;
+    animation: pulse2 2s ease-in-out infinite;
+  }
+
+  .pulse-dot.idle {
+    @apply bg-text-muted;
+    animation: none;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-bg-page;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-text-muted;
+  }
+
+  /* Audio wave bars indicator */
+  .audio-wave {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 1.5px;
+    height: 14px;
+  }
+  .audio-wave span {
+    display: block;
+    width: 2px;
+    border-radius: 1px;
+    animation: wave 1.2s ease-in-out infinite;
+  }
+  .audio-wave span:nth-child(1) {
+    height: 40%;
+    animation-delay: 0s;
+  }
+  .audio-wave span:nth-child(2) {
+    height: 70%;
+    animation-delay: 0.15s;
+  }
+  .audio-wave span:nth-child(3) {
+    height: 100%;
+    animation-delay: 0.3s;
+  }
+  .audio-wave span:nth-child(4) {
+    height: 60%;
+    animation-delay: 0.45s;
+  }
+  .audio-wave span:nth-child(5) {
+    height: 80%;
+    animation-delay: 0.6s;
+  }
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}

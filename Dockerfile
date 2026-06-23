@@ -1,4 +1,6 @@
 # ─── Stage 1: Build React client ─────────────────────────────────────────────
+# Build context is THIS directory (self-contained). The client + its workspace
+# deps (shared-types, shared-utils) and the root package files were copied in.
 FROM node:22-alpine AS node-builder
 WORKDIR /app
 COPY package.json package-lock.json ./
@@ -20,9 +22,22 @@ RUN npm run build:client
 FROM golang:1.25-alpine AS go-builder
 WORKDIR /app
 RUN apk add --no-cache git
-COPY starsim-go/go.mod starsim-go/go.sum ./
+COPY go.mod go.sum ./
 RUN go mod download
-COPY starsim-go/ ./
+# Copy only the Go source (keeps the client out of the Go build layer)
+COPY main.go routes.go ./
+COPY config/ ./config/
+COPY db/ ./db/
+COPY engine/ ./engine/
+COPY handlers/ ./handlers/
+COPY logger/ ./logger/
+COPY middleware/ ./middleware/
+COPY models/ ./models/
+COPY services/ ./services/
+COPY static/ ./static/
+COPY tts/ ./tts/
+COPY ttsconfig/ ./ttsconfig/
+COPY websocket/ ./websocket/
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -o starsim .
 
 
@@ -45,9 +60,9 @@ RUN apt-get update && apt-get install -y wget ca-certificates libespeak-ng1 --no
     && rm -rf /tmp/piper.tar.gz /tmp/piper
 
 COPY --from=node-builder /app/client/dist ./client/dist
-COPY --from=go-builder /app/starsim ./starsim
-# Optional: bundled voices / assets (Piper voices are mounted via docker-compose volume)
-COPY starsim-go/assets/ ./assets/
+COPY --from=go-builder   /app/starsim ./starsim
+# Bundled assets (Piper voices can also be supplied via a docker-compose volume)
+COPY assets/ ./assets/
 
 ENV PORT=3000 \
     PIPER_BIN=/app/assets/piper/piper \
