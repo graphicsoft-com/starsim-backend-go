@@ -1,0 +1,41 @@
+# ─── Secrets / environment ───────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ─── Go build artifacts ──────────────────────────────────────────────────────
+# Compiled binary (module name "starsim") and any other binaries
+/starsim
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go workspace / vendor
+/vendor/
+go.work
+go.work.sum
+
+# ─── Logs ────────────────────────────────────────────────────────────────────
+logs/
+*.log
+
+# ─── Built frontend (served via CLIENT_DIST_PATH) ────────────────────────────
+client/dist/
+
+# ─── TTS runtime artifacts ───────────────────────────────────────────────────
+# Generated audio output; keep the Piper binary/voices if they live in assets
+*.wav
+tmp/
+*.tmp
+
+# ─── OS / editor cruft ───────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
