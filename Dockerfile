@@ -59,6 +59,19 @@ RUN apt-get update && apt-get install -y wget ca-certificates libespeak-ng1 --no
     && chmod +x /app/assets/piper/piper \
     && rm -rf /tmp/piper.tar.gz /tmp/piper
 
+# Piper voice models (must match tts/piper.go CharacterVoiceMap). Fetched here
+# so the image is self-contained even though the .onnx files are git-ignored.
+RUN set -eux; base="https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US"; \
+    mkdir -p /app/assets/piper/voices; \
+    for id in en_US-lessac-high en_US-hfc_female-medium en_US-amy-medium en_US-kristin-medium \
+              en_US-ljspeech-high en_US-lessac-medium en_US-ryan-high en_US-joe-medium \
+              en_US-norman-medium en_US-bryce-medium en_US-hfc_male-medium en_US-ryan-medium; do \
+      rest="${id#en_US-}"; quality="${rest##*-}"; name="${rest%-*}"; \
+      for ext in onnx onnx.json; do \
+        wget -qO "/app/assets/piper/voices/$id.$ext" "$base/$name/$quality/$id.$ext"; \
+      done; \
+    done
+
 COPY --from=node-builder /app/client/dist ./client/dist
 COPY --from=go-builder   /app/starsim ./starsim
 # Bundled assets (Piper voices can also be supplied via a docker-compose volume)

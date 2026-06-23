@@ -32,10 +32,15 @@ shared-utils/dist/
 .vite/
 
 # ─── TTS runtime artifacts ───────────────────────────────────────────────────
-# Generated audio output; keep the Piper binary/voices if they live in assets
 *.wav
 tmp/
 *.tmp
+
+# ─── Piper binary, bundled libs, espeak data, voice models (~930MB) ──────────
+# Downloadable artifacts — fetch with assets/piper/install-piper.sh; the
+# Dockerfile also fetches them at build time. Keep only the installer tracked.
+assets/piper/*
+!assets/piper/install-piper.sh
 
 # ─── OS / editor cruft ───────────────────────────────────────────────────────
 .DS_Store
