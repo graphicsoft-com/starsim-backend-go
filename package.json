@@ -3,13 +3,13 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently --names \"SERVER,CLIENT\" --prefix-colors \"yellow,cyan\" \"npm run dev:server\" \"npm run dev:client\"",
+    "dev": "node api.js && concurrently --names \"SERVER,CLIENT\" --prefix-colors \"yellow,cyan\" \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "cd server && npx tsx watch src/main.ts",
     "dev:client": "npx wait-on http://localhost:3000/api/simulation/status -t 60000 && vite --config client/vite.config.mts",
-    "build": "npm run build:client && npm run build:server",
+    "build": "node api.js && npm run build:client && npm run build:server",
     "build:server": "webpack --config server/webpack.config.js --mode production",
     "build:client": "vite build --config client/vite.config.mts",
-    "start": "cd server && node dist/main.js"
+    "start": "node api.js && cd server && node dist/main.js"
   },
   "private": true,
   "devDependencies": {
